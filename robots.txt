@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://duanlian.xyz/sitemap.xml
