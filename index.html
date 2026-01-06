@@ -131,7 +131,7 @@
           <p>这个数字不是答案，<br />只是一个参考。</p>
         </div>
 
-        <!-- 阶段判断显示位置 -->
+        <!-- 阶段显示 -->
         <div id="stage"></div>
 
         <!-- 分享按钮 -->
@@ -156,22 +156,26 @@
   </div>
 
   <script>
+    // 日期解析，完全不受时区影响
+    function parseDate(str) {
+      const parts = str.split("-");
+      return new Date(parts[0], parts[1]-1, parts[2]);
+    }
+
     function calculate() {
       const startInput = document.getElementById("startDate").value;
       const endInput = document.getElementById("endDate").value;
 
       if (!startInput) { alert("请选择关系开始时间"); return; }
 
-      // 修正日期解析和当天计算
       const todayStr = new Date().toISOString().split("T")[0];
-      const startDate = new Date(startInput + "T00:00:00");
-      const endDate = new Date((endInput || todayStr) + "T00:00:00");
+      const startDate = parseDate(startInput);
+      const endDate = endInput ? parseDate(endInput) : parseDate(todayStr);
 
       if (endDate < startDate) { alert("结束时间不能早于开始时间"); return; }
 
       // 计算天数，包含当天
-      const diffTime = endDate - startDate;
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
+      const diffDays = Math.floor((endDate - startDate) / (1000*60*60*24)) + 1;
 
       const months = Math.floor(diffDays / 30);
       const daysLeft = diffDays % 30;
@@ -183,42 +187,42 @@
       document.getElementById("months").innerText = `约合：${months} 个月 ${daysLeft} 天`;
       document.getElementById("percent").innerText = `如果从你过去 ${yearsSpan} 年来计算，它占用了你人生的大约 ${percent}%。`;
 
-      // 阶段文案库
+      // 阶段文案逻辑
       const stages = {
         green: [
-          `🟢 断联 0–7 天｜情绪冷却期<br>这通常不算真正结束。更多是情绪对冲、争执后的停顿，关系结构尚未解体。`,
-          `🟢 断联 0–7 天｜初期冷却<br>刚刚断联的几天，情绪波动最大，但关系本身尚未结束。`,
-          `🟢 断联 0–7 天｜短期停顿<br>这段时间内，你可能很想联系对方，但大部分关系仍处于调整期，并非终结。`
+          `🟢 断联 0–7 天｜情绪冷却期<br>这通常不算真正结束。`,
+          `🟢 断联 0–7 天｜初期冷却<br>刚刚断联的几天，情绪波动最大。`,
+          `🟢 断联 0–7 天｜短期停顿<br>大部分关系仍处于调整期。`
         ],
         yellow: [
-          `🟡 断联 8–30 天｜事实断裂期<br>关系开始进入现实层面的断开，如果对方没有任何主动修复或明确态度，已经不只是冷战。`,
-          `🟡 断联 8–30 天｜稳定分离<br>这段时间表明双方联系越来越少，关系已偏向中止状态，继续等待往往收效甚微。`,
-          `🟡 断联 8–30 天｜现实冷却<br>断联超过一周后，情绪对冲减少，关系逐渐进入分离轨道。`
+          `🟡 断联 8–30 天｜事实断裂期<br>关系开始进入现实层面的断开。`,
+          `🟡 断联 8–30 天｜稳定分离<br>双方联系越来越少，关系已偏向中止状态。`,
+          `🟡 断联 8–30 天｜现实冷却<br>断联超过一周后，关系逐渐进入分离轨道。`
         ],
         red: [
-          `🔴 断联 31 天以上｜关系终止期<br>这段关系在现实层面基本已经结束，继续等待的意义，往往不是在等对方，而是在和过去的自己拉扯。`,
-          `🔴 断联 31 天以上｜结束阶段<br>关系已明显终止，再继续依赖过去的联系只会增加痛苦。`,
-          `🔴 断联 31 天以上｜彻底断开<br>超过一个月未联系，关系已进入结束状态，专注于自己会更有意义。`
+          `🔴 断联 31 天以上｜关系终止期<br>这段关系在现实层面基本已经结束。`,
+          `🔴 断联 31 天以上｜结束阶段<br>关系已明显终止。`,
+          `🔴 断联 31 天以上｜彻底断开<br>专注于自己会更有意义。`
         ]
       };
 
-      function getRandom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
-
+      function getRandom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
       let stageHtml = '';
-      if (diffDays <= 7) stageHtml = `<p class="green"><strong>${getRandom(stages.green)}</strong></p>`;
-      else if (diffDays <= 30) stageHtml = `<p class="yellow"><strong>${getRandom(stages.yellow)}</strong></p>`;
+      if(diffDays <= 7) stageHtml = `<p class="green"><strong>${getRandom(stages.green)}</strong></p>`;
+      else if(diffDays <=30) stageHtml = `<p class="yellow"><strong>${getRandom(stages.yellow)}</strong></p>`;
       else stageHtml = `<p class="red"><strong>${getRandom(stages.red)}</strong></p>`;
 
-      let stageDiv = document.getElementById("stage");
-      stageDiv.innerHTML = stageHtml + `<p><em>⚠️ 提示：这个结果不会替你做决定。它只是告诉你，你现在站在这段关系的哪一段路上。</em></p>`;
+      document.getElementById("stage").innerHTML = stageHtml +
+        `<p><em>⚠️ 提示：这个结果不会替你做决定。它只是告诉你，你现在站在这段关系的哪一段路上。</em></p>`;
 
       document.getElementById("result").style.display = "block";
       window.location.hash = "#result";
     }
 
+    // 分享图片功能
     function shareResult() {
       const card = document.getElementById("result-card");
-      html2canvas(card, {backgroundColor: null}).then(canvas => {
+      html2canvas(card, {backgroundColor: null}).then(canvas=>{
         const link = document.createElement("a");
         link.download = "关系时间结果.png";
         link.href = canvas.toDataURL("image/png");
