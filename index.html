@@ -120,7 +120,9 @@
         <p>断联天数：<strong id="breakDays"></strong></p>
         <div id="stage"></div>
         <div class="explain">
-          <p>时间本身没有对错，这只是参考信息。</p>
+          <p>时间本身没有对错。</p>
+          <p>当一段关系持续的时间超过预期，它往往会影响你对当下的判断。</p>
+          <p>这个数字不是答案，只是一个参考。</p>
         </div>
 
         <!-- 分享按钮 -->
@@ -140,15 +142,31 @@
 
     <footer>
       <p>本工具仅用于时间计算与参考，不构成任何情感或心理建议。</p>
-      <p><a href="/about.html">关于这个工具V12</a></p>
+      <p><a href="/about.html">关于这个工具</a></p>
     </footer>
   </div>
 
   <script>
+    // 阶段微评语数组，每个阶段可随机显示 2-3 条
     const comments = {
-      green: ["刚刚断联，别急着回头。","冷静几天，观察自己的感受。"],
-      yellow: ["时间在慢慢冲淡过去。","多关注自己，给自己空间。"],
-      red: ["彻底断开，重新开始。","坚持一段时间，你会轻松。"]
+      green: [
+        "你刚断联，别急着回头。",
+        "冷静几天，观察自己的感受。",
+        "给自己一些时间，不要着急。",
+        "保持清醒，先关注自己。"
+      ],
+      yellow: [
+        "时间在慢慢冲淡过去。",
+        "多关注自己，给自己空间。",
+        "生活还在继续，慢慢前行。",
+        "断联过程中，你会慢慢释怀。"
+      ],
+      red: [
+        "彻底断开，重新开始。",
+        "坚持一段时间，你会轻松。",
+        "放下过去，迎接新生活。",
+        "时间会让你重新振作起来。"
+      ]
     };
 
     function calculate() {
@@ -179,16 +197,25 @@
       document.getElementById("days").innerText = `${totalDays} 天`;
       document.getElementById("breakDays").innerText = `${breakDays} 天`;
 
-      // 阶段和微评语
+      // 阶段判断
       let stageHtml = '';
       let arr = [];
-      if(breakDays <= 7){ stageHtml = `<p class="green"><strong>🟢 断联 0–7 天｜情绪冷却期</strong></p>`; arr = comments.green; }
-      else if(breakDays <= 30){ stageHtml = `<p class="yellow"><strong>🟡 断联 8–30 天｜稳定分离</strong></p>`; arr = comments.yellow; }
-      else { stageHtml = `<p class="red"><strong>🔴 断联 31 天以上｜彻底断开</strong></p>`; arr = comments.red; }
+      if(breakDays <= 7){ 
+        stageHtml = `<p class="green"><strong>🟢 断联 0–7 天｜情绪冷却期</strong></p>`; 
+        arr = comments.green; 
+      }
+      else if(breakDays <= 30){ 
+        stageHtml = `<p class="yellow"><strong>🟡 断联 8–30 天｜稳定分离</strong></p>`; 
+        arr = comments.yellow; 
+      }
+      else { 
+        stageHtml = `<p class="red"><strong>🔴 断联 31 天以上｜彻底断开</strong></p>`; 
+        arr = comments.red; 
+      }
 
-      // 随机抽 1-2 条微评语
-      const shuffled = arr.sort(()=>0.5-Math.random());
-      const commentHtml = shuffled.slice(0,2).map(c=>`<p>💬 ${c}</p>`).join('');
+      // 随机选择 2–3 条微评语
+      const shuffled = arr.sort(()=>0.5 - Math.random());
+      const commentHtml = shuffled.slice(0,3).map(c=>`<p>💬 ${c}</p>`).join('');
       stageHtml += commentHtml;
 
       document.getElementById("stage").innerHTML = stageHtml;
