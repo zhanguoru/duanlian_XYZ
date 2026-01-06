@@ -162,13 +162,16 @@
 
       if (!startInput) { alert("请选择关系开始时间"); return; }
 
-      const startDate = new Date(startInput);
-      const endDate = endInput ? new Date(endInput) : new Date();
+      // 修正日期解析和当天计算
+      const todayStr = new Date().toISOString().split("T")[0];
+      const startDate = new Date(startInput + "T00:00:00");
+      const endDate = new Date((endInput || todayStr) + "T00:00:00");
 
       if (endDate < startDate) { alert("结束时间不能早于开始时间"); return; }
 
+      // 计算天数，包含当天
       const diffTime = endDate - startDate;
-      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
 
       const months = Math.floor(diffDays / 30);
       const daysLeft = diffDays % 30;
