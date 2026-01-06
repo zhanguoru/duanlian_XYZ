@@ -150,26 +150,24 @@
 
     <footer>
       <p>本工具仅用于时间计算与参考，不构成任何情感或心理建议。</p>
-      <p><a href="/about.html">关于这个工具V09</a></p>
+      <p><a href="/about.html">关于这个工具V10</a></p>
     </footer>
   </div>
 
   <script>
     function calculate() {
-      const startInput = document.getElementById("startDate").valueAsDate;
-      const endInput = document.getElementById("endDate").valueAsDate;
+      const startInput = document.getElementById("startDate").value;
+      const endInput = document.getElementById("endDate").value || new Date().toISOString().split('T')[0];
 
       if(!startInput){ alert("请选择关系开始时间"); return; }
 
-      // 核心修复：使用 valueAsDate 保证可靠
-      const startDate = new Date(startInput.getFullYear(), startInput.getMonth(), startInput.getDate());
-      const endDate = endInput
-        ? new Date(endInput.getFullYear(), endInput.getMonth(), endInput.getDate())
-        : new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
+      // 核心修复：日期字符串直接转为零点时间戳
+      const startDate = new Date(startInput + "T00:00:00");
+      const endDate   = new Date(endInput + "T00:00:00");
 
       if(endDate < startDate){ alert("结束时间不能早于开始时间"); return; }
 
-      const diffDays = Math.floor((endDate - startDate)/(1000*60*60*24)) + 1;
+      const diffDays = Math.round((endDate - startDate)/(1000*60*60*24)) + 1;
 
       const months = Math.floor(diffDays / 30);
       const daysLeft = diffDays % 30;
