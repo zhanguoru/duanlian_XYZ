@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -127,8 +126,8 @@
 
         <div class="explain">
           <p>时间本身没有对错。</p>
-          <p>但当一段关系持续的时间，<br />已经超过你原本的预期，<br />它往往会影响你对当下的判断。</p>
-          <p>这个数字不是答案，<br />只是一个参考。</p>
+          <p>当一段关系持续的时间已经超过你原本的预期，它往往会影响你对当下的判断。</p>
+          <p>这个数字不是答案，只是一个参考。</p>
         </div>
 
         <!-- 阶段显示 -->
@@ -142,40 +141,36 @@
     <h2 id="faq">常见问题与使用说明</h2>
 
     <div class="faq">
-      <p><strong>这个结果代表什么？</strong><br />它只代表一段关系在时间上的长度，不代表感情的质量，也不代表你应该做出什么选择。</p>
+      <p><strong>这个结果代表什么？</strong><br />它只代表一段关系在时间上的长度，不代表感情质量，也不代表你应该做出什么选择。</p>
 
-      <p><strong>适用于哪些关系？</strong><br />适用于恋爱、暧昧、分开后仍有联系、断联阶段等任何你认为“还没彻底结束”的关系。</p>
+      <p><strong>适用于哪些关系？</strong><br />恋爱、暧昧、分开后仍有联系、断联阶段等任何你认为“还没彻底结束”的关系。</p>
 
-      <p><strong>你们会保存我的数据吗？</strong><br />不会。所有计算都在你的浏览器中完成，我们不会记录、保存或上传任何个人信息。</p>
+      <p><strong>你们会保存我的数据吗？</strong><br />不会。所有计算都在你的浏览器中完成，不会记录或上传任何个人信息。</p>
     </div>
 
     <footer>
       <p>本工具仅用于时间计算与参考，不构成任何情感或心理建议。</p>
-      <p><a href="/about.html">关于这个工具V07</a></p>
+      <p><a href="/about.html">关于这个工具V08</a></p>
     </footer>
   </div>
 
   <script>
-    // 完全正确的断联天数计算，避免时区问题
-    function parseDate(str) {
-      const [year, month, day] = str.split('-').map(Number);
-      return new Date(year, month - 1, day);
-    }
-
     function calculate() {
       const startInput = document.getElementById("startDate").value;
       const endInput = document.getElementById("endDate").value;
 
-      if (!startInput) { alert("请选择关系开始时间"); return; }
+      if(!startInput){ alert("请选择关系开始时间"); return; }
 
-      const todayStr = new Date().toISOString().split('T')[0];
-      const startDate = parseDate(startInput);
-      const endDate = endInput ? parseDate(endInput) : parseDate(todayStr);
+      const startDate = new Date(startInput);
+      const endDate = endInput ? new Date(endInput) : new Date();
 
-      if (endDate < startDate) { alert("结束时间不能早于开始时间"); return; }
+      // 核心修复：归零时分秒
+      startDate.setHours(0,0,0,0);
+      endDate.setHours(0,0,0,0);
 
-      const oneDay = 1000*60*60*24;
-      const diffDays = Math.floor((endDate - startDate)/oneDay) + 1; // 开始日算一天
+      if(endDate < startDate){ alert("结束时间不能早于开始时间"); return; }
+
+      const diffDays = Math.floor((endDate - startDate)/(1000*60*60*24)) + 1;
 
       const months = Math.floor(diffDays / 30);
       const daysLeft = diffDays % 30;
@@ -186,39 +181,30 @@
       document.getElementById("months").innerText = `约合：${months} 个月 ${daysLeft} 天`;
       document.getElementById("percent").innerText = `如果从你过去 ${yearsSpan} 年来计算，它占用了你人生的大约 ${percent}%。`;
 
-      // 阶段文案随机显示
+      // 随机阶段文案
       const stages = {
         green: [
-          `🟢 断联 0–7 天｜情绪冷却期<br>这通常不算真正结束。`,
-          `🟢 断联 0–7 天｜初期冷却<br>刚刚断联的几天，情绪波动最大。`,
-          `🟢 断联 0–7 天｜短期停顿<br>大部分关系仍处于调整期。`
+          `🟢 断联 0–7 天｜情绪冷却期<br>刚刚断联，情绪波动最大。`
         ],
         yellow: [
-          `🟡 断联 8–30 天｜事实断裂期<br>关系开始进入现实层面的断开。`,
-          `🟡 断联 8–30 天｜稳定分离<br>双方联系越来越少，关系已偏向中止状态。`,
-          `🟡 断联 8–30 天｜现实冷却<br>断联超过一周后，关系逐渐进入分离轨道。`
+          `🟡 断联 8–30 天｜稳定分离<br>关系逐渐进入分离轨道。`
         ],
         red: [
-          `🔴 断联 31 天以上｜关系终止期<br>这段关系在现实层面基本已经结束。`,
-          `🔴 断联 31 天以上｜结束阶段<br>关系已明显终止。`,
           `🔴 断联 31 天以上｜彻底断开<br>专注于自己会更有意义。`
         ]
       };
 
-      function getRandom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
       let stageHtml = '';
-      if(diffDays <= 7) stageHtml = `<p class="green"><strong>${getRandom(stages.green)}</strong></p>`;
-      else if(diffDays <=30) stageHtml = `<p class="yellow"><strong>${getRandom(stages.yellow)}</strong></p>`;
-      else stageHtml = `<p class="red"><strong>${getRandom(stages.red)}</strong></p>`;
+      if(diffDays <= 7) stageHtml = `<p class="green"><strong>${stages.green[0]}</strong></p>`;
+      else if(diffDays <=30) stageHtml = `<p class="yellow"><strong>${stages.yellow[0]}</strong></p>`;
+      else stageHtml = `<p class="red"><strong>${stages.red[0]}</strong></p>`;
 
-      document.getElementById("stage").innerHTML = stageHtml +
-        `<p><em>⚠️ 提示：这个结果不会替你做决定。它只是告诉你，你现在站在这段关系的哪一段路上。</em></p>`;
+      document.getElementById("stage").innerHTML = stageHtml;
 
       document.getElementById("result").style.display = "block";
       window.location.hash = "#result";
     }
 
-    // 分享图片功能
     function shareResult() {
       const card = document.getElementById("result-card");
       html2canvas(card, {backgroundColor: null}).then(canvas=>{
