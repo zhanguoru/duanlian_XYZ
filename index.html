@@ -150,23 +150,22 @@
 
     <footer>
       <p>本工具仅用于时间计算与参考，不构成任何情感或心理建议。</p>
-      <p><a href="/about.html">关于这个工具V08</a></p>
+      <p><a href="/about.html">关于这个工具V09</a></p>
     </footer>
   </div>
 
   <script>
     function calculate() {
-      const startInput = document.getElementById("startDate").value;
-      const endInput = document.getElementById("endDate").value;
+      const startInput = document.getElementById("startDate").valueAsDate;
+      const endInput = document.getElementById("endDate").valueAsDate;
 
       if(!startInput){ alert("请选择关系开始时间"); return; }
 
-      const startDate = new Date(startInput);
-      const endDate = endInput ? new Date(endInput) : new Date();
-
-      // 核心修复：归零时分秒
-      startDate.setHours(0,0,0,0);
-      endDate.setHours(0,0,0,0);
+      // 核心修复：使用 valueAsDate 保证可靠
+      const startDate = new Date(startInput.getFullYear(), startInput.getMonth(), startInput.getDate());
+      const endDate = endInput
+        ? new Date(endInput.getFullYear(), endInput.getMonth(), endInput.getDate())
+        : new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
 
       if(endDate < startDate){ alert("结束时间不能早于开始时间"); return; }
 
@@ -181,26 +180,13 @@
       document.getElementById("months").innerText = `约合：${months} 个月 ${daysLeft} 天`;
       document.getElementById("percent").innerText = `如果从你过去 ${yearsSpan} 年来计算，它占用了你人生的大约 ${percent}%。`;
 
-      // 随机阶段文案
-      const stages = {
-        green: [
-          `🟢 断联 0–7 天｜情绪冷却期<br>刚刚断联，情绪波动最大。`
-        ],
-        yellow: [
-          `🟡 断联 8–30 天｜稳定分离<br>关系逐渐进入分离轨道。`
-        ],
-        red: [
-          `🔴 断联 31 天以上｜彻底断开<br>专注于自己会更有意义。`
-        ]
-      };
-
+      // 阶段文案
       let stageHtml = '';
-      if(diffDays <= 7) stageHtml = `<p class="green"><strong>${stages.green[0]}</strong></p>`;
-      else if(diffDays <=30) stageHtml = `<p class="yellow"><strong>${stages.yellow[0]}</strong></p>`;
-      else stageHtml = `<p class="red"><strong>${stages.red[0]}</strong></p>`;
+      if(diffDays <= 7) stageHtml = `<p class="green"><strong>🟢 断联 0–7 天｜情绪冷却期</strong></p>`;
+      else if(diffDays <=30) stageHtml = `<p class="yellow"><strong>🟡 断联 8–30 天｜稳定分离</strong></p>`;
+      else stageHtml = `<p class="red"><strong>🔴 断联 31 天以上｜彻底断开</strong></p>`;
 
       document.getElementById("stage").innerHTML = stageHtml;
-
       document.getElementById("result").style.display = "block";
       window.location.hash = "#result";
     }
