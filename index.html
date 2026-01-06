@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
   <!-- SEO 保留 -->
   <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1">
   <link rel="canonical" href="https://duanlian.xyz/">
@@ -40,12 +41,8 @@
   <!-- Plausible Analytics -->
   <script async src="https://plausible.io/js/pa-UzWKQXHoJ_r1quqGUAeMG.js"></script>
   <script>
-    window.plausible = window.plausible || function () {
-      (plausible.q = plausible.q || []).push(arguments)
-    }
-    plausible.init = plausible.init || function (i) {
-      plausible.o = i || {}
-    }
+    window.plausible = window.plausible || function () { (plausible.q = plausible.q || []).push(arguments) }
+    plausible.init = plausible.init || function (i) { plausible.o = i || {} }
     plausible.init()
   </script>
 
@@ -150,24 +147,34 @@
 
     <footer>
       <p>本工具仅用于时间计算与参考，不构成任何情感或心理建议。</p>
-      <p><a href="/about.html">关于这个工具V10</a></p>
+      <p><a href="/about.html">关于这个工具V11</a></p>
     </footer>
   </div>
 
   <script>
     function calculate() {
       const startInput = document.getElementById("startDate").value;
-      const endInput = document.getElementById("endDate").value || new Date().toISOString().split('T')[0];
+      const endInputRaw = document.getElementById("endDate").value;
+      const todayStr = new Date().toISOString().split('T')[0];
+      const endInput = endInputRaw ? endInputRaw : todayStr;
+
+      // 调试日志，确认拿到的值
+      console.log("startInput:", startInput, "endInput:", endInput);
 
       if(!startInput){ alert("请选择关系开始时间"); return; }
 
-      // 核心修复：日期字符串直接转为零点时间戳
       const startDate = new Date(startInput + "T00:00:00");
-      const endDate   = new Date(endInput + "T00:00:00");
+      const endDate = new Date(endInput + "T00:00:00");
+
+      if(isNaN(startDate.getTime()) || isNaN(endDate.getTime())){
+        alert("日期格式错误"); return;
+      }
 
       if(endDate < startDate){ alert("结束时间不能早于开始时间"); return; }
 
+      // 计算天数
       const diffDays = Math.round((endDate - startDate)/(1000*60*60*24)) + 1;
+      console.log("diffDays:", diffDays);
 
       const months = Math.floor(diffDays / 30);
       const daysLeft = diffDays % 30;
@@ -178,20 +185,21 @@
       document.getElementById("months").innerText = `约合：${months} 个月 ${daysLeft} 天`;
       document.getElementById("percent").innerText = `如果从你过去 ${yearsSpan} 年来计算，它占用了你人生的大约 ${percent}%。`;
 
-      // 阶段文案
+      // 阶段文案判断
       let stageHtml = '';
       if(diffDays <= 7) stageHtml = `<p class="green"><strong>🟢 断联 0–7 天｜情绪冷却期</strong></p>`;
       else if(diffDays <=30) stageHtml = `<p class="yellow"><strong>🟡 断联 8–30 天｜稳定分离</strong></p>`;
       else stageHtml = `<p class="red"><strong>🔴 断联 31 天以上｜彻底断开</strong></p>`;
 
       document.getElementById("stage").innerHTML = stageHtml;
+
       document.getElementById("result").style.display = "block";
       window.location.hash = "#result";
     }
 
     function shareResult() {
       const card = document.getElementById("result-card");
-      html2canvas(card, {backgroundColor: null}).then(canvas=>{
+      html2canvas(card, {backgroundColor:null}).then(canvas=>{
         const link = document.createElement("a");
         link.download = "关系时间结果.png";
         link.href = canvas.toDataURL("image/png");
