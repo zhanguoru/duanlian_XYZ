@@ -151,15 +151,15 @@
 
     <footer>
       <p>本工具仅用于时间计算与参考，不构成任何情感或心理建议。</p>
-      <p><a href="/about.html">关于这个工具V06</a></p>
+      <p><a href="/about.html">关于这个工具V07</a></p>
     </footer>
   </div>
 
   <script>
-    // 日期解析，完全不受时区影响
+    // 完全正确的断联天数计算，避免时区问题
     function parseDate(str) {
-      const parts = str.split("-");
-      return new Date(parts[0], parts[1]-1, parts[2]);
+      const [year, month, day] = str.split('-').map(Number);
+      return new Date(year, month - 1, day);
     }
 
     function calculate() {
@@ -168,26 +168,25 @@
 
       if (!startInput) { alert("请选择关系开始时间"); return; }
 
-      const todayStr = new Date().toISOString().split("T")[0];
+      const todayStr = new Date().toISOString().split('T')[0];
       const startDate = parseDate(startInput);
       const endDate = endInput ? parseDate(endInput) : parseDate(todayStr);
 
       if (endDate < startDate) { alert("结束时间不能早于开始时间"); return; }
 
-      // 计算天数，包含当天
-      const diffDays = Math.floor((endDate - startDate) / (1000*60*60*24)) + 1;
+      const oneDay = 1000*60*60*24;
+      const diffDays = Math.floor((endDate - startDate)/oneDay) + 1; // 开始日算一天
 
       const months = Math.floor(diffDays / 30);
       const daysLeft = diffDays % 30;
-
       const yearsSpan = Math.max(1, new Date().getFullYear() - startDate.getFullYear());
-      const percent = ((diffDays / (yearsSpan * 365)) * 100).toFixed(1);
+      const percent = ((diffDays / (yearsSpan*365)) * 100).toFixed(1);
 
       document.getElementById("days").innerText = `共计：${diffDays} 天`;
       document.getElementById("months").innerText = `约合：${months} 个月 ${daysLeft} 天`;
       document.getElementById("percent").innerText = `如果从你过去 ${yearsSpan} 年来计算，它占用了你人生的大约 ${percent}%。`;
 
-      // 阶段文案逻辑
+      // 阶段文案随机显示
       const stages = {
         green: [
           `🟢 断联 0–7 天｜情绪冷却期<br>这通常不算真正结束。`,
@@ -230,6 +229,5 @@
       });
     }
   </script>
-
 </body>
 </html>
