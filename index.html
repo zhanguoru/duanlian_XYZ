@@ -356,6 +356,8 @@
   </div>
 
   <script>
+    let LAST_BLOB = null;
+    let LAST_FILE = null;
 
     function calculate() {
       const startInput = document.getElementById("startDate").value;
@@ -473,12 +475,15 @@
             // 1) 优先 Web Share（iOS/Android 支持度更好；用户可在分享面板里“存储图像”）
             try {
               if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                await navigator.share({
-                  files: [file],
-                  title: "断联时间结果"
-                });
-                restore(); // 记得还原 no-capture
+                // ✅ iOS 上：不要在生成后立刻 share（会丢用户手势）
+                // 只保存 blob/file，然后弹层让用户再点一次“分享”
+                LAST_BLOB = blob;
+                LAST_FILE = new File([blob], "断联时间结果.png", { type: "image/png" });
+
+                showMobilePreview(blob); // 继续用你的弹层
+                restore();
                 return;
+
               }
             } catch (e) {
               // 分享失败就走预览
@@ -551,8 +556,28 @@
         text-decoration:none; font-family:inherit;
       `;
 
-      bar.appendChild(btnClose);
-      bar.appendChild(aOpen);
+        const btnShare = document.createElement("button");
+        btnShare.textContent = "分享";
+        btnShare.style.cssText = `flex:1; padding:12px; border-radius:10px; border:0;`;
+
+        btnShare.onclick = () => {
+          // 必须由用户再次点击触发，iOS 才允许
+          if (!LAST_FILE) {
+            alert("请先生成图片");
+            return;
+          }
+          if (navigator.share) {
+            navigator.share({ files: [LAST_FILE], title: "断联时间结果" })
+              .catch(err => console.warn("share failed:", err));
+          } else {
+            alert("当前浏览器不支持系统分享，请点“打开图片”后用浏览器分享按钮保存。");
+          }
+        };
+
+        bar.appendChild(btnClose);
+        bar.appendChild(btnShare);
+        bar.appendChild(aOpen);
+
 
       // 图片
       const img = document.createElement("img");
