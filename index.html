@@ -183,44 +183,29 @@
       opacity: 0.55;
       text-align: right;
     }
-
-    /* Intro 双折叠（不影响SEO：内容仍在HTML中，只是折叠显示） */
-    .intro-fold{
-      border:1px solid #eee;
-      border-radius:12px;
+    /* 折叠按钮 */
+    .toggle-btn{
+      width:auto;
       padding:10px 12px;
-      background:#fff;
-      margin:10px 0;
-    }
-    .intro-fold summary{
-      cursor:pointer;
-      font-weight:600;
-      list-style:none;
-    }
-    .intro-fold summary::-webkit-details-marker{ display:none; }
-    .intro-fold .fold-body{
-      margin-top:8px;
-      color:#444;
-      line-height:1.75;
-    }
-    .jump-btn{
-      display:inline-block;
-      margin:8px 0 6px;
-      padding:10px 12px;
+      font-size:14px;
       border-radius:10px;
       background:#111;
       color:#fff;
-      text-decoration:none;
-      font-size:14px;
+      border:0;
+      cursor:pointer;
+      margin-top:10px;
     }
 
-    /* 移动端通用优化（不要再用 display:none 隐藏内容，避免误伤FAQ/折叠） */
+    /* 默认隐藏长说明 */
+    .intro-more{ display:block; }
     @media screen and (max-width: 480px) {
+      /* 手机端：首屏更“短” */
+      .intro-more{ display:none; }
       .intro-short p{ margin:10px 0; }
+
+      /* 让工具更靠上更聚焦 */
       .tool{ padding:14px; }
-      p{ line-height:1.75; }
-      details{ display:block; }
-      summary{ display:list-item; }
+      p{ line-height:1.75; } /* 手机更易读 */
     }
 
     /* FAQ 手风琴样式 */
@@ -242,6 +227,8 @@
       color:#444;
       line-height:1.75;
     }
+
+
   </style>
 </head>
 
@@ -249,46 +236,40 @@
   <div class="container" id="result-card">
     <h1>断联多久算结束？</h1>
     <p class="intro">
-      这是一个<strong>断联时间计算工具</strong>，用于计算一段关系持续了多久，以及断联已经过去了多少天，帮助你用时间而不是感觉判断关系状态。
+  这是一个<strong>断联时间计算工具</strong>，用于计算一段关系持续了多久，以及断联已经过去了多少天，帮助你用时间而不是感觉判断关系状态。
+   </p>
+   <p><strong>很多人都会问：断联多久算结束？</strong>  
+     其实并没有一个统一答案，但时间本身可以被计算清楚。</p>
+
+<div class="intro intro-short">
+  <p>
+    断联多久才算结束，其实没有统一答案。把时间算清楚，能让你更客观地看清关系状态。
+  </p>
+
+  <button class="toggle-btn no-capture" type="button" onclick="toggleIntro()" id="introToggle">
+    展开说明
+  </button>
+
+  <div class="intro-more" id="introMore">
+    <p>
+      断联多久才算结束，其实是很多人在关系中最纠结的问题之一。
+      有些人几天没联系就开始不安，有些人断联几个月，内心却依然觉得关系还没有真正结束。
+      当情绪反复拉扯时，人往往很难对时间做出客观判断。
     </p>
-    <p><strong>很多人都会问：断联多久算结束？</strong><br/>
-      其实并没有一个统一答案，但时间本身可以被计算清楚。</p>
+    <p>
+      与其一遍遍回想聊天记录，不如把这段关系在时间上算清楚。
+      通过计算关系持续了多久、断联已经过去了多少天，
+      你可以更直观地看清这段关系所处的阶段，而不是只凭感觉纠结。
+    </p>
+    <p>
+      如果你想更具体地了解不同关系中，
+      断联时间通常意味着什么，
+      可以参考这篇说明：
+      <a href="/duanlian-guide.html">断联多久算结束？不同关系的时间参考</a>。
+    </p>
+  </div>
+</div>
 
-    <div class="intro intro-short">
-      <p>
-        断联多久才算结束，其实没有统一答案。把时间算清楚，能让你更客观地看清关系状态。
-      </p>
-
-      <a class="jump-btn no-capture" href="#tool">立即计算</a>
-
-      <details class="intro-fold" id="fold-why">
-        <summary>为什么要算断联时间？</summary>
-        <div class="fold-body">
-          <p>
-            断联多久才算结束，其实是很多人在关系中最纠结的问题之一。
-            有些人几天没联系就开始不安，有些人断联几个月，内心却依然觉得关系还没有真正结束。
-            当情绪反复拉扯时，人往往很难对时间做出客观判断。
-          </p>
-          <p>
-            与其一遍遍回想聊天记录，不如把这段关系在时间上算清楚。
-            通过计算关系持续了多久、断联已经过去了多少天，
-            你可以更直观地看清这段关系所处的阶段，而不是只凭感觉纠结。
-          </p>
-        </div>
-      </details>
-
-      <details class="intro-fold" id="fold-full">
-        <summary>展开完整说明（不同关系的时间参考）</summary>
-        <div class="fold-body">
-          <p>
-            如果你想更具体地了解不同关系中，
-            断联时间通常意味着什么，
-            可以参考这篇说明：
-            <a href="/duanlian-guide.html">断联多久算结束？不同关系的时间参考</a>。
-          </p>
-        </div>
-      </details>
-    </div>
 
     <h2>断联时间计算器</h2>
     <div class="tool" id="tool">
@@ -336,7 +317,7 @@
               计算来自 duanlian.xyz · 本地计算 · 不保存任何数据
             </div>
           </div>
-        </div>
+        </div> <!-- ✅ 这里补上：close share-card -->
 
         <!-- 页面内补充说明（不进入截图） -->
         <div class="no-capture">
@@ -344,11 +325,13 @@
           <p>它不会替你做决定，但能帮你确认：你到底在这段关系里停留了多久。</p>
         </div>
 
+
         <button class="share-btn no-capture" onclick="shareResult()">生成分享图片</button>
       </div>
     </div>
 
     <h2 id="faq">断联多久算结束？常见问题</h2>
+
 
     <div class="faq">
       <details>
@@ -412,6 +395,8 @@
       </details>
     </div>
 
+
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -433,6 +418,7 @@
   }]
 }
 </script>
+
 
     <footer>
       <p>本工具仅用于时间计算与参考，不构成任何情感或心理建议。</p>
@@ -471,10 +457,11 @@
       const breakDaysRaw = Math.floor((todayUTC - utcEnd)/(1000*60*60*24)) + 1;
       const breakDays = Math.max(0, breakDaysRaw);
 
+
       document.getElementById("days").innerText = `${totalDays} 天`;
       document.getElementById("breakDays").innerText = `${breakDays} 天`;
 
-      // 阶段判断（情绪化表达，用于分享卡）
+       // 阶段判断（情绪化表达，用于分享卡）
       let badgeText = "";
       let titleText = "";
       let subText = "";
@@ -502,6 +489,7 @@
       document.getElementById("shareSub").innerText = subText;
       document.getElementById("shareHint").innerText = hintText;
 
+      //document.getElementById("stage").innerHTML = stageHtml;
       document.getElementById("result").style.display = "block";
       window.location.hash = "#result";
     }
@@ -564,11 +552,13 @@
                 LAST_BLOB = blob;
                 LAST_FILE = new File([blob], "断联时间结果.png", { type: "image/png" });
 
-                showMobilePreview(blob);
+                showMobilePreview(blob); // 继续用你的弹层
                 restore();
                 return;
+
               }
             } catch (e) {
+              // 分享失败就走预览
               console.warn("share failed:", e);
             }
 
@@ -577,8 +567,9 @@
             restore();
           }, "image/png");
 
-          return;
+          return; // ⚠️ 移动端走到这里就结束，不走 PC 下载逻辑
         }
+
 
         // ✅ 电脑端：直接下载
         canvas.toBlob((blob) => {
@@ -637,26 +628,28 @@
         text-decoration:none; font-family:inherit;
       `;
 
-      const btnShare = document.createElement("button");
-      btnShare.textContent = "分享";
-      btnShare.style.cssText = `flex:1; padding:12px; border-radius:10px; border:0;`;
+        const btnShare = document.createElement("button");
+        btnShare.textContent = "分享";
+        btnShare.style.cssText = `flex:1; padding:12px; border-radius:10px; border:0;`;
 
-      btnShare.onclick = () => {
-        if (!LAST_FILE) {
-          alert("请先生成图片");
-          return;
-        }
-        if (navigator.share) {
-          navigator.share({ files: [LAST_FILE], title: "断联时间结果" })
-            .catch(err => console.warn("share failed:", err));
-        } else {
-          alert("当前浏览器不支持系统分享，请点“打开图片”后用浏览器分享按钮保存。");
-        }
-      };
+        btnShare.onclick = () => {
+          // 必须由用户再次点击触发，iOS 才允许
+          if (!LAST_FILE) {
+            alert("请先生成图片");
+            return;
+          }
+          if (navigator.share) {
+            navigator.share({ files: [LAST_FILE], title: "断联时间结果" })
+              .catch(err => console.warn("share failed:", err));
+          } else {
+            alert("当前浏览器不支持系统分享，请点“打开图片”后用浏览器分享按钮保存。");
+          }
+        };
 
-      bar.appendChild(btnClose);
-      bar.appendChild(btnShare);
-      bar.appendChild(aOpen);
+        bar.appendChild(btnClose);
+        bar.appendChild(btnShare);
+        bar.appendChild(aOpen);
+
 
       // 图片
       const img = document.createElement("img");
@@ -666,6 +659,7 @@
         max-width:100%; max-height:75vh;
         border-radius:14px; background:#fff;
       `;
+      // ⚠️ 关键：不要禁用长按菜单（别加 user-select:none / touch-callout:none）
 
       // 提示文案
       const hint = document.createElement("div");
@@ -689,6 +683,18 @@
         if (e.target === overlay) cleanup();
       });
     }
+
+    function toggleIntro() {
+      const more = document.getElementById("introMore");
+      const btn = document.getElementById("introToggle");
+      if (!more || !btn) return;
+
+      const isHidden = getComputedStyle(more).display === "none";
+      more.style.display = isHidden ? "block" : "none";
+      btn.textContent = isHidden ? "收起说明" : "展开说明";
+    }
+
+
   </script>
 </body>
 </html>
