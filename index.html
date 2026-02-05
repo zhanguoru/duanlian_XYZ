@@ -460,41 +460,39 @@
           useCORS: true
         });
 
-        // ✅ 移动端：打开预览页，让用户长按保存
+        // ✅ 移动端：优先走系统分享（更像“保存到相册”），不支持再弹层预览
         if (isMobileDevice()) {
-          const dataUrl = canvas.toDataURL("image/png");
+          canvas.toBlob(async (blob) => {
+            if (!blob) {
+              alert("生成图片失败");
+              return;
+            }
 
-          const win = window.open();
-          if (!win) {
-            // 被拦截时：退化为在当前页打开（兼容微信/拦截弹窗场景）
-            window.location.href = dataUrl;
-            return;
-          }
+            const file = new File([blob], "断联时间结果.png", { type: "image/png" });
 
-          win.document.open();
-          win.document.write(`
-            <!DOCTYPE html>
-            <html lang="zh-CN">
-            <head>
-              <meta charset="UTF-8" />
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-              <title>长按保存图片</title>
-              <style>
-                body{margin:0;background:#000;height:100vh;display:flex;align-items:center;justify-content:center;}
-                img{max-width:100%;max-height:100%;-webkit-user-select:none;user-select:none;}
-                .hint{position:fixed;left:0;right:0;bottom:18px;text-align:center;
-                      color:#fff;font-size:14px;opacity:.85;padding:0 12px;}
-              </style>
-            </head>
-            <body>
-              <img src="${dataUrl}" alt="结果图片" />
-              <div class="hint">长按图片 → 保存到相册</div>
-            </body>
-            </html>
-          `);
-          win.document.close();
-          return;
+            // 1) 优先 Web Share（iOS/Android 支持度更好；用户可在分享面板里“存储图像”）
+            try {
+              if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                await navigator.share({
+                  files: [file],
+                  title: "断联时间结果"
+                });
+                restore(); // 记得还原 no-capture
+                return;
+              }
+            } catch (e) {
+              // 分享失败就走预览
+              console.warn("share failed:", e);
+            }
+
+            // 2) fallback：当前页弹层预览 + Blob URL + “打开图片”链接
+            showMobilePreview(blob);
+            restore();
+          }, "image/png");
+
+          return; // ⚠️ 移动端走到这里就结束，不走 PC 下载逻辑
         }
+
 
         // ✅ 电脑端：直接下载
         canvas.toBlob((blob) => {
@@ -515,6 +513,78 @@
       } finally {
         restore();
       }
+    }
+    
+    function showMobilePreview(blob) {
+      const url = URL.createObjectURL(blob);
+
+      // 弹层
+      const overlay = document.createElement("div");
+      overlay.id = "saveOverlay";
+      overlay.style.cssText = `
+        position:fixed; inset:0; z-index:999999;
+        background:rgba(0,0,0,.85);
+        display:flex; flex-direction:column;
+        align-items:center; justify-content:center;
+        padding:16px; box-sizing:border-box;
+      `;
+
+      // 顶部按钮区
+      const bar = document.createElement("div");
+      bar.style.cssText = `
+        width:100%; max-width:720px;
+        display:flex; gap:10px; margin-bottom:12px;
+      `;
+
+      const btnClose = document.createElement("button");
+      btnClose.textContent = "关闭";
+      btnClose.style.cssText = `flex:1; padding:12px; border-radius:10px; border:0;`;
+
+      const aOpen = document.createElement("a");
+      aOpen.textContent = "打开图片";
+      aOpen.href = url;
+      aOpen.target = "_blank";
+      aOpen.rel = "noopener";
+      aOpen.style.cssText = `
+        flex:1; padding:12px; border-radius:10px;
+        background:#fff; color:#000; text-align:center;
+        text-decoration:none; font-family:inherit;
+      `;
+
+      bar.appendChild(btnClose);
+      bar.appendChild(aOpen);
+
+      // 图片
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = "结果图片";
+      img.style.cssText = `
+        max-width:100%; max-height:75vh;
+        border-radius:14px; background:#fff;
+      `;
+      // ⚠️ 关键：不要禁用长按菜单（别加 user-select:none / touch-callout:none）
+
+      // 提示文案
+      const hint = document.createElement("div");
+      hint.style.cssText = `
+        margin-top:12px; color:#fff; opacity:.9;
+        font-size:14px; text-align:center; line-height:1.6;
+      `;
+      hint.innerHTML = `长按图片 → 保存到相册<br/>如果没有“保存”，点“打开图片”后再长按`;
+
+      overlay.appendChild(bar);
+      overlay.appendChild(img);
+      overlay.appendChild(hint);
+      document.body.appendChild(overlay);
+
+      const cleanup = () => {
+        URL.revokeObjectURL(url);
+        overlay.remove();
+      };
+      btnClose.onclick = cleanup;
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) cleanup();
+      });
     }
 
 
