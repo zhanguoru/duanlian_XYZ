@@ -228,6 +228,38 @@
       line-height:1.75;
     }
 
+    /* intro 折叠（双折叠） */
+    .intro-fold{
+      border:1px solid #eee;
+      border-radius:12px;
+      padding:10px 12px;
+      background:#fff;
+      margin:10px 0;
+    }
+    .intro-fold summary{
+      cursor:pointer;
+      font-weight:600;
+      list-style:none;
+    }
+    .intro-fold summary::-webkit-details-marker{ display:none; }
+    .intro-fold .fold-body{
+      margin-top:8px;
+      color:#444;
+      line-height:1.75;
+    }
+
+    /* 可选：立即计算按钮（比 button 更轻，不挡SEO） */
+    .jump-btn{
+      display:inline-block;
+      margin:8px 0 6px;
+      padding:10px 12px;
+      border-radius:10px;
+      background:#111;
+      color:#fff;
+      text-decoration:none;
+      font-size:14px;
+    }
+      
 
   </style>
 </head>
@@ -246,28 +278,35 @@
     断联多久才算结束，其实没有统一答案。把时间算清楚，能让你更客观地看清关系状态。
   </p>
 
-  <button class="toggle-btn no-capture" type="button" onclick="toggleIntro()" id="introToggle">
-    展开说明
-  </button>
+  <a class="jump-btn no-capture" href="#tool">立即计算</a>
 
-  <div class="intro-more" id="introMore">
-    <p>
-      断联多久才算结束，其实是很多人在关系中最纠结的问题之一。
-      有些人几天没联系就开始不安，有些人断联几个月，内心却依然觉得关系还没有真正结束。
-      当情绪反复拉扯时，人往往很难对时间做出客观判断。
-    </p>
-    <p>
-      与其一遍遍回想聊天记录，不如把这段关系在时间上算清楚。
-      通过计算关系持续了多久、断联已经过去了多少天，
-      你可以更直观地看清这段关系所处的阶段，而不是只凭感觉纠结。
-    </p>
-    <p>
-      如果你想更具体地了解不同关系中，
-      断联时间通常意味着什么，
-      可以参考这篇说明：
-      <a href="/duanlian-guide.html">断联多久算结束？不同关系的时间参考</a>。
-    </p>
-  </div>
+  <details class="intro-fold" id="fold-why">
+    <summary>为什么要算断联时间？</summary>
+    <div class="fold-body">
+      <p>
+        断联多久才算结束，其实是很多人在关系中最纠结的问题之一。
+        有些人几天没联系就开始不安，有些人断联几个月，内心却依然觉得关系还没有真正结束。
+        当情绪反复拉扯时，人往往很难对时间做出客观判断。
+      </p>
+      <p>
+        与其一遍遍回想聊天记录，不如把这段关系在时间上算清楚。
+        通过计算关系持续了多久、断联已经过去了多少天，
+        你可以更直观地看清这段关系所处的阶段，而不是只凭感觉纠结。
+      </p>
+    </div>
+  </details>
+
+  <details class="intro-fold" id="fold-full">
+    <summary>展开完整说明</summary>
+    <div class="fold-body">
+      <p>
+        如果你想更具体地了解不同关系中，
+        断联时间通常意味着什么，
+        可以参考这篇说明：
+        <a href="/duanlian-guide.html">断联多久算结束？不同关系的时间参考</a>。
+      </p>
+    </div>
+  </details>
 </div>
 
 
@@ -682,16 +721,6 @@
       overlay.addEventListener("click", (e) => {
         if (e.target === overlay) cleanup();
       });
-    }
-
-    function toggleIntro() {
-      const more = document.getElementById("introMore");
-      const btn = document.getElementById("introToggle");
-      if (!more || !btn) return;
-
-      const isHidden = getComputedStyle(more).display === "none";
-      more.style.display = isHidden ? "block" : "none";
-      btn.textContent = isHidden ? "收起说明" : "展开说明";
     }
 
 
