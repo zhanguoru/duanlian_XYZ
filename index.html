@@ -418,17 +418,14 @@
       window.location.hash = "#result";
     }
 
-    function shareResult() {
+    async function shareResult() {
     const hiddenEls = document.querySelectorAll(".no-capture");
 
-    const restore = () => {
-      hiddenEls.forEach(el => {
-        el.style.display = el.dataset._display || "";
-        delete el.dataset._display;
-      });
-    };
+    const restore = () => hiddenEls.forEach(el => {
+      el.style.display = el.dataset._display || "";
+      delete el.dataset._display;
+    });
 
-    // 截图前隐藏
     hiddenEls.forEach(el => {
       el.dataset._display = el.style.display;
       el.style.display = "none";
@@ -436,63 +433,32 @@
 
     try {
       const card = document.getElementById("share-card");
-      if (!card) {
-        alert("请先点计算，再生成分享图片");
-        return;
-      }
+      if (!card) { alert("请先点计算，再生成分享图片"); return; }
 
-      card.scrollIntoView({ behavior: "auto", block: "center" });
+      // ✅ 等字体加载完成（移动端很关键）
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
 
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          const rect = card.getBoundingClientRect();
-          const scale = 2;
+      const scale = Math.min(2, window.devicePixelRatio || 2);
 
-          html2canvas(document.body, {
-            backgroundColor: "#ffffff",
-            scale: scale,
-            useCORS: true,
-            scrollX: -window.scrollX,
-            scrollY: -window.scrollY
-          }).then(canvas => {
-            const padding = 24 * scale;
-
-            let sx = Math.round(rect.left * scale) - padding;
-            let sy = Math.round(rect.top * scale) - padding;
-            let sw = Math.round(rect.width * scale) + padding * 2;
-            let sh = Math.round(rect.height * scale) + padding * 2;
-
-            sx = Math.max(0, sx);
-            sy = Math.max(0, sy);
-            sw = Math.min(canvas.width - sx, sw);
-            sh = Math.min(canvas.height - sy, sh);
-
-            const out = document.createElement("canvas");
-            out.width = sw;
-            out.height = sh;
-            const ctx = out.getContext("2d");
-
-            ctx.drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
-
-            const link = document.createElement("a");
-            link.download = "断联时间结果.png";
-            link.href = out.toDataURL("image/png");
-            link.click();
-          }).catch(err => {
-            console.error(err);
-            alert("截图失败：请打开控制台查看错误");
-          }).finally(() => {
-            restore();
-          });
-        });
+      const canvas = await html2canvas(card, {
+        backgroundColor: "#ffffff",
+        scale,
+        useCORS: true,
+        // ✅ 移动端更稳：不要传 scrollX/scrollY，截元素就行
       });
-    } catch (e) {
-      console.error(e);
+
+      const link = document.createElement("a");
+      link.download = "断联时间结果.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+
+    } catch (err) {
+      console.error(err);
+      alert("截图失败：请打开控制台查看错误");
+    } finally {
       restore();
-      alert("截图流程出错：请打开控制台查看错误");
     }
   }
-
 
   </script>
 </body>
