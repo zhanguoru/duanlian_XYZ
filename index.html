@@ -71,7 +71,8 @@
     h1 { font-size:28px; margin-bottom:12px; line-height:1.3;}
     h2 { font-size:22px; margin-top:40px; line-height:1.3;}
     p { line-height:1.7; margin:12px 0;}
-    .intro { color:#444; margin-bottom:32px;}
+    .intro { color:#444; margin-bottom:18px;}
+
     .tool { border:1px solid #e5e5e5; padding:20px; border-radius:12px; margin-bottom:32px; background:#fafafa;}
     label { display:block; margin-bottom:6px; font-weight:500;}
     input[type="date"] { width:100%; padding:12px; margin-bottom:16px; font-size:16px; box-sizing:border-box; border-radius:6px; border:1px solid #ccc;}
@@ -79,21 +80,20 @@
     button:hover { opacity:0.9;}
     .result { margin-top:24px; padding:20px; border-radius:12px; background:#fff; border:1px solid #ddd; display:none; box-shadow:0 2px 10px rgba(0,0,0,0.05);}
     .result strong { font-size:18px;}
-    .explain { margin-top:16px; color:#444;}
-    .faq p { margin-bottom:16px;}
     footer { margin-top:48px; font-size:14px; color:#666;}
-    .green { color: #2a9d8f; }
-    .yellow { color: #e9c46a; }
-    .red { color: #e76f51; }
     .share-btn { margin-top:16px; background:#0077cc; color:#fff; }
     .share-btn:hover { opacity:0.85; }
+
     @media screen and (max-width: 480px) {
       h1 { font-size:24px; }
       h2 { font-size:20px; }
       input[type="date"] { padding:14px; font-size:15px; }
       button { padding:18px; font-size:15px; }
       .container { padding:16px 12px 48px; }
+      .tool{ padding:14px; }
+      p{ line-height:1.75; }
     }
+
     .share-card {
       background: linear-gradient(160deg,#0f172a,#111827);
       color: #fff;
@@ -108,11 +108,7 @@
       align-items: center;
       margin-bottom: 14px;
     }
-    .brand {
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      opacity: 0.9;
-    }
+    .brand { font-weight: 700; letter-spacing: 0.3px; opacity: 0.9; }
     .badge {
       font-size: 12px;
       padding: 6px 10px;
@@ -120,23 +116,9 @@
       background: rgba(255,255,255,0.12);
       border: 1px solid rgba(255,255,255,0.14);
     }
-    .share-title {
-      font-size: 20px;
-      line-height: 1.35;
-      font-weight: 800;
-      margin: 6px 0 8px;
-    }
-    .share-sub {
-      font-size: 14px;
-      line-height: 1.65;
-      opacity: 0.88;
-      margin-bottom: 14px;
-    }
-    .share-metrics {
-      display: flex;
-      gap: 12px;
-      margin-top: 6px;
-    }
+    .share-title { font-size: 20px; line-height: 1.35; font-weight: 800; margin: 6px 0 8px; }
+    .share-sub { font-size: 14px; line-height: 1.65; opacity: 0.88; margin-bottom: 14px; }
+    .share-metrics { display: flex; gap: 12px; margin-top: 6px; }
     .share-metrics .m {
       flex: 1;
       background: rgba(255,255,255,0.08);
@@ -144,132 +126,116 @@
       border-radius: 14px;
       padding: 12px;
     }
-    .share-metrics .k {
-      font-size: 12px;
-      opacity: 0.75;
-      margin-bottom: 6px;
-    }
-    .share-metrics .v {
-      font-size: 26px;
-      font-weight: 900;
-      letter-spacing: 0.2px;
-    }
+    .share-metrics .k { font-size: 12px; opacity: 0.75; margin-bottom: 6px; }
+    .share-metrics .v { font-size: 26px; font-weight: 900; letter-spacing: 0.2px; }
+    .share-foot { margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.12); }
+    .share-foot .hint { font-size: 13px; opacity: 0.85; }
+    .watermark { margin-top: 8px; font-size: 12px; line-height: 1.4; opacity: 0.55; text-align: right; }
 
-    .share-foot {
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid rgba(255,255,255,0.12);
-    }
-    .share-foot .hint {
-      font-size: 13px;
-      opacity: 0.85;
-    }
-    .capture-wrap {
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 720px;
-      padding: 16px;
-      background: #ffffff;
-      box-sizing: border-box;
-      pointer-events: none;
-      z-index: 999999;
-      opacity: 0.001;
-    }
-    .watermark {
-      margin-top: 8px;
-      font-size: 12px;
-      line-height: 1.4;
-      opacity: 0.55;
-      text-align: right;
-    }
-    /* 折叠按钮 */
-    .toggle-btn{
-      width:auto;
-      padding:10px 12px;
-      font-size:14px;
-      border-radius:10px;
-      background:#111;
-      color:#fff;
-      border:0;
-      cursor:pointer;
-      margin-top:10px;
-    }
-
-    /* 默认隐藏长说明 */
-    .intro-more{ display:block; }
-    @media screen and (max-width: 480px) {
-      /* 手机端：首屏更“短” */
-      .intro-more{ display:none; }
-      .intro-short p{ margin:10px 0; }
-
-      /* 让工具更靠上更聚焦 */
-      .tool{ padding:14px; }
-      p{ line-height:1.75; } /* 手机更易读 */
-    }
-
-    /* FAQ 手风琴样式 */
-    .faq details{
+    /* 可折叠块：按钮 + 内容（不依赖 <details>，iPhone/微信都稳定） */
+    .fold {
       border:1px solid #eee;
       border-radius:12px;
-      padding:10px 12px;
       background:#fff;
       margin:10px 0;
+      overflow:hidden;
     }
-    .faq summary{
+    .fold-btn{
+      width:100%;
+      text-align:left;
+      padding:12px 12px;
+      background:#fff;
+      color:#111;
+      border:0;
       cursor:pointer;
-      font-weight:600;
-      list-style:none;
+      font-size:15px;
+      font-weight:700;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
     }
-    .faq summary::-webkit-details-marker{ display:none; }
-    .faq .faq-body{
-      margin-top:8px;
+    .fold-btn .chev{
+      font-size:14px;
+      opacity:0.75;
+      flex:0 0 auto;
+      transition: transform .15s ease;
+    }
+    .fold-body{
+      padding:0 12px 12px;
       color:#444;
       line-height:1.75;
     }
+    /* 默认收起 */
+    .fold[data-open="0"] .fold-body{ display:none; }
+    .fold[data-open="0"] .fold-btn .chev{ transform: rotate(0deg); }
+    .fold[data-open="1"] .fold-btn .chev{ transform: rotate(180deg); }
 
-
+    .jump-btn{
+      display:inline-block;
+      margin:8px 0 6px;
+      padding:10px 12px;
+      border-radius:10px;
+      background:#111;
+      color:#fff;
+      text-decoration:none;
+      font-size:14px;
+    }
   </style>
 </head>
 
 <body>
   <div class="container" id="result-card">
     <h1>断联多久算结束？</h1>
+
     <p class="intro">
-  这是一个<strong>断联时间计算工具</strong>，用于计算一段关系持续了多久，以及断联已经过去了多少天，帮助你用时间而不是感觉判断关系状态。
-   </p>
-   <p><strong>很多人都会问：断联多久算结束？</strong>  
-     其实并没有一个统一答案，但时间本身可以被计算清楚。</p>
-
-<div class="intro intro-short">
-  <p>
-    断联多久才算结束，其实没有统一答案。把时间算清楚，能让你更客观地看清关系状态。
-  </p>
-
-  <button class="toggle-btn no-capture" type="button" onclick="toggleIntro()" id="introToggle">
-    展开说明
-  </button>
-
-  <div class="intro-more" id="introMore">
-    <p>
-      断联多久才算结束，其实是很多人在关系中最纠结的问题之一。
-      有些人几天没联系就开始不安，有些人断联几个月，内心却依然觉得关系还没有真正结束。
-      当情绪反复拉扯时，人往往很难对时间做出客观判断。
+      这是一个<strong>断联时间计算工具</strong>，用于计算一段关系持续了多久，以及断联已经过去了多少天，帮助你用时间而不是感觉判断关系状态。
     </p>
-    <p>
-      与其一遍遍回想聊天记录，不如把这段关系在时间上算清楚。
-      通过计算关系持续了多久、断联已经过去了多少天，
-      你可以更直观地看清这段关系所处的阶段，而不是只凭感觉纠结。
-    </p>
-    <p>
-      如果你想更具体地了解不同关系中，
-      断联时间通常意味着什么，
-      可以参考这篇说明：
-      <a href="/duanlian-guide.html">断联多久算结束？不同关系的时间参考</a>。
-    </p>
-  </div>
-</div>
 
+    <p class="intro"><strong>很多人都会问：断联多久算结束？</strong><br/>
+      其实并没有一个统一答案，但时间本身可以被计算清楚。</p>
+
+    <div class="intro intro-short">
+      <p>
+        断联多久才算结束，其实没有统一答案。把时间算清楚，能让你更客观地看清关系状态。
+      </p>
+
+      <a class="jump-btn no-capture" href="#tool">立即计算</a>
+
+      <div class="fold" data-open="0" id="fold-why">
+        <button class="fold-btn" type="button" data-fold-toggle aria-expanded="false">
+          <span>为什么要算断联时间？</span>
+          <span class="chev">▾</span>
+        </button>
+        <div class="fold-body">
+          <p>
+            断联多久才算结束，其实是很多人在关系中最纠结的问题之一。
+            有些人几天没联系就开始不安，有些人断联几个月，内心却依然觉得关系还没有真正结束。
+            当情绪反复拉扯时，人往往很难对时间做出客观判断。
+          </p>
+          <p>
+            与其一遍遍回想聊天记录，不如把这段关系在时间上算清楚。
+            通过计算关系持续了多久、断联已经过去了多少天，
+            你可以更直观地看清这段关系所处的阶段，而不是只凭感觉纠结。
+          </p>
+        </div>
+      </div>
+
+      <div class="fold" data-open="0" id="fold-full">
+        <button class="fold-btn" type="button" data-fold-toggle aria-expanded="false">
+          <span>展开完整说明（不同关系的时间参考）</span>
+          <span class="chev">▾</span>
+        </button>
+        <div class="fold-body">
+          <p>
+            如果你想更具体地了解不同关系中，
+            断联时间通常意味着什么，
+            可以参考这篇说明：
+            <a href="/duanlian-guide.html">断联多久算结束？不同关系的时间参考</a>。
+          </p>
+        </div>
+      </div>
+    </div>
 
     <h2>断联时间计算器</h2>
     <div class="tool" id="tool">
@@ -282,8 +248,6 @@
       <button onclick="calculate()">计算这段关系的时间</button>
 
       <div class="result" id="result">
-
-        <!-- 分享截图专用卡片 -->
         <div class="share-card" id="share-card">
           <div class="share-top">
             <div class="brand">duanlian.xyz</div>
@@ -317,14 +281,12 @@
               计算来自 duanlian.xyz · 本地计算 · 不保存任何数据
             </div>
           </div>
-        </div> <!-- ✅ 这里补上：close share-card -->
+        </div>
 
-        <!-- 页面内补充说明（不进入截图） -->
         <div class="no-capture">
           <p>你现在看到的是时间的结果。</p>
           <p>它不会替你做决定，但能帮你确认：你到底在这段关系里停留了多久。</p>
         </div>
-
 
         <button class="share-btn no-capture" onclick="shareResult()">生成分享图片</button>
       </div>
@@ -332,70 +294,81 @@
 
     <h2 id="faq">断联多久算结束？常见问题</h2>
 
-
     <div class="faq">
-      <details>
-        <summary>什么是断联？</summary>
-        <div class="faq-body">
+      <div class="fold" data-open="0">
+        <button class="fold-btn" type="button" data-fold-toggle aria-expanded="false">
+          <span>什么是断联？</span><span class="chev">▾</span>
+        </button>
+        <div class="fold-body">
           断联通常指双方在一段关系中，主动或被动地停止联系，包括不再聊天、不再见面，也不再通过任何方式保持互动。
           有些断联是暂时的，有些则意味着关系正在走向结束。
         </div>
-      </details>
+      </div>
 
-      <details>
-        <summary>断联多久才算结束？</summary>
-        <div class="faq-body">
+      <div class="fold" data-open="0">
+        <button class="fold-btn" type="button" data-fold-toggle aria-expanded="false">
+          <span>断联多久才算结束？</span><span class="chev">▾</span>
+        </button>
+        <div class="fold-body">
           并不存在一个绝对统一的时间标准。对有些人来说，几周没有联系就已经是结束；
           对另一些人来说，即使几个月不联系，内心仍然认为关系尚未真正结束。
           时间本身不会给出答案，但可以帮助你更清楚地看清现状。
         </div>
-      </details>
+      </div>
 
-      <details>
-        <summary>为什么要计算断联时间？</summary>
-        <div class="faq-body">
+      <div class="fold" data-open="0">
+        <button class="fold-btn" type="button" data-fold-toggle aria-expanded="false">
+          <span>为什么要计算断联时间？</span><span class="chev">▾</span>
+        </button>
+        <div class="fold-body">
           很多时候，人放不下，并不是因为感情有多深，而是因为已经投入了太多时间。
           把时间算清楚，可以帮助你跳出情绪，用更客观的角度看待这段关系。
         </div>
-      </details>
+      </div>
 
-      <details>
-        <summary>断联时间越久，关系就越容易结束吗？</summary>
-        <div class="faq-body">
+      <div class="fold" data-open="0">
+        <button class="fold-btn" type="button" data-fold-toggle aria-expanded="false">
+          <span>断联时间越久，关系就越容易结束吗？</span><span class="chev">▾</span>
+        </button>
+        <div class="fold-body">
           时间并不一定决定结果，但它往往会改变人的判断。
           随着断联时间拉长，情绪会逐渐冷却，依赖感也会发生变化，
           很多人正是在这个过程中，慢慢接受了关系已经结束的事实。
         </div>
-      </details>
+      </div>
 
-      <details>
-        <summary>这个结果代表什么？</summary>
-        <div class="faq-body">
+      <div class="fold" data-open="0">
+        <button class="fold-btn" type="button" data-fold-toggle aria-expanded="false">
+          <span>这个结果代表什么？</span><span class="chev">▾</span>
+        </button>
+        <div class="fold-body">
           计算结果只代表一段关系在时间上的长度，
           不代表感情的好坏，也不代表你应该做出什么选择。
           它只是一个参考，而不是结论。
         </div>
-      </details>
+      </div>
 
-      <details>
-        <summary>适用于哪些关系？</summary>
-        <div class="faq-body">
+      <div class="fold" data-open="0">
+        <button class="fold-btn" type="button" data-fold-toggle aria-expanded="false">
+          <span>适用于哪些关系？</span><span class="chev">▾</span>
+        </button>
+        <div class="fold-body">
           无论是恋爱、暧昧、分开后仍有联系，
           还是已经进入断联阶段但内心仍然纠结的关系，
           只要你觉得“还没彻底结束”，都可以使用这个工具。
         </div>
-      </details>
+      </div>
 
-      <details>
-        <summary>你们会保存我的数据吗？</summary>
-        <div class="faq-body">
+      <div class="fold" data-open="0">
+        <button class="fold-btn" type="button" data-fold-toggle aria-expanded="false">
+          <span>你们会保存我的数据吗？</span><span class="chev">▾</span>
+        </button>
+        <div class="fold-body">
           不会。所有计算都在你的浏览器中完成，
           不会被记录、存储或上传，任何个人信息都不会被收集。
         </div>
-      </details>
+      </div>
     </div>
-
-
 
 <script type="application/ld+json">
 {
@@ -419,7 +392,6 @@
 }
 </script>
 
-
     <footer>
       <p>本工具仅用于时间计算与参考，不构成任何情感或心理建议。</p>
       <p><a href="/about.html">关于这个工具</a></p>
@@ -428,6 +400,29 @@
   </div>
 
   <script>
+    // 折叠组件：同一按钮可“展开/收起”
+    (function(){
+      function setOpen(fold, open){
+        fold.setAttribute('data-open', open ? '1' : '0');
+        var btn = fold.querySelector('[data-fold-toggle]');
+        if(btn){
+          btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+      }
+
+      document.querySelectorAll('.fold').forEach(function(fold){
+        var btn = fold.querySelector('[data-fold-toggle]');
+        if(!btn) return;
+
+        setOpen(fold, fold.getAttribute('data-open') === '1');
+
+        btn.addEventListener('click', function(){
+          var now = fold.getAttribute('data-open') === '1';
+          setOpen(fold, !now);
+        });
+      });
+    })();
+
     let LAST_BLOB = null;
     let LAST_FILE = null;
 
@@ -450,18 +445,14 @@
       const utcStart = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
       const utcEnd = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
 
-      // 关系总天数
       const totalDays = Math.floor((utcEnd - utcStart)/(1000*60*60*24)) + 1;
 
-      // 断联天数
       const breakDaysRaw = Math.floor((todayUTC - utcEnd)/(1000*60*60*24)) + 1;
       const breakDays = Math.max(0, breakDaysRaw);
-
 
       document.getElementById("days").innerText = `${totalDays} 天`;
       document.getElementById("breakDays").innerText = `${breakDays} 天`;
 
-       // 阶段判断（情绪化表达，用于分享卡）
       let badgeText = "";
       let titleText = "";
       let subText = "";
@@ -489,7 +480,6 @@
       document.getElementById("shareSub").innerText = subText;
       document.getElementById("shareHint").innerText = hintText;
 
-      //document.getElementById("stage").innerHTML = stageHtml;
       document.getElementById("result").style.display = "block";
       window.location.hash = "#result";
     }
@@ -508,7 +498,6 @@
         });
       };
 
-      // 截图前隐藏不需要的元素
       hiddenEls.forEach(el => {
         el.dataset._display = el.style.display;
         el.style.display = "none";
@@ -521,12 +510,10 @@
           return;
         }
 
-        // 等字体加载（移动端非常关键）
         if (document.fonts && document.fonts.ready) {
           await document.fonts.ready;
         }
 
-        // 直接截卡片（比截 body 再裁剪稳定）
         const scale = Math.min(2, window.devicePixelRatio || 2);
         const canvas = await html2canvas(card, {
           backgroundColor: "#ffffff",
@@ -534,7 +521,6 @@
           useCORS: true
         });
 
-        // ✅ 移动端：优先走系统分享（更像“保存到相册”），不支持再弹层预览
         if (isMobileDevice()) {
           canvas.toBlob(async (blob) => {
             if (!blob) {
@@ -544,34 +530,26 @@
 
             const file = new File([blob], "断联时间结果.png", { type: "image/png" });
 
-            // 1) 优先 Web Share（iOS/Android 支持度更好；用户可在分享面板里“存储图像”）
             try {
               if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                // ✅ iOS 上：不要在生成后立刻 share（会丢用户手势）
-                // 只保存 blob/file，然后弹层让用户再点一次“分享”
                 LAST_BLOB = blob;
                 LAST_FILE = new File([blob], "断联时间结果.png", { type: "image/png" });
 
-                showMobilePreview(blob); // 继续用你的弹层
+                showMobilePreview(blob);
                 restore();
                 return;
-
               }
             } catch (e) {
-              // 分享失败就走预览
               console.warn("share failed:", e);
             }
 
-            // 2) fallback：当前页弹层预览 + Blob URL + “打开图片”链接
             showMobilePreview(blob);
             restore();
           }, "image/png");
 
-          return; // ⚠️ 移动端走到这里就结束，不走 PC 下载逻辑
+          return;
         }
 
-
-        // ✅ 电脑端：直接下载
         canvas.toBlob((blob) => {
           if (!blob) return;
           const url = URL.createObjectURL(blob);
@@ -591,11 +569,10 @@
         restore();
       }
     }
-    
+
     function showMobilePreview(blob) {
       const url = URL.createObjectURL(blob);
 
-      // 弹层
       const overlay = document.createElement("div");
       overlay.id = "saveOverlay";
       overlay.style.cssText = `
@@ -606,7 +583,6 @@
         padding:16px; box-sizing:border-box;
       `;
 
-      // 顶部按钮区
       const bar = document.createElement("div");
       bar.style.cssText = `
         width:100%; max-width:720px;
@@ -628,30 +604,27 @@
         text-decoration:none; font-family:inherit;
       `;
 
-        const btnShare = document.createElement("button");
-        btnShare.textContent = "分享";
-        btnShare.style.cssText = `flex:1; padding:12px; border-radius:10px; border:0;`;
+      const btnShare = document.createElement("button");
+      btnShare.textContent = "分享";
+      btnShare.style.cssText = `flex:1; padding:12px; border-radius:10px; border:0;`;
 
-        btnShare.onclick = () => {
-          // 必须由用户再次点击触发，iOS 才允许
-          if (!LAST_FILE) {
-            alert("请先生成图片");
-            return;
-          }
-          if (navigator.share) {
-            navigator.share({ files: [LAST_FILE], title: "断联时间结果" })
-              .catch(err => console.warn("share failed:", err));
-          } else {
-            alert("当前浏览器不支持系统分享，请点“打开图片”后用浏览器分享按钮保存。");
-          }
-        };
+      btnShare.onclick = () => {
+        if (!LAST_FILE) {
+          alert("请先生成图片");
+          return;
+        }
+        if (navigator.share) {
+          navigator.share({ files: [LAST_FILE], title: "断联时间结果" })
+            .catch(err => console.warn("share failed:", err));
+        } else {
+          alert("当前浏览器不支持系统分享，请点“打开图片”后用浏览器分享按钮保存。");
+        }
+      };
 
-        bar.appendChild(btnClose);
-        bar.appendChild(btnShare);
-        bar.appendChild(aOpen);
+      bar.appendChild(btnClose);
+      bar.appendChild(btnShare);
+      bar.appendChild(aOpen);
 
-
-      // 图片
       const img = document.createElement("img");
       img.src = url;
       img.alt = "结果图片";
@@ -659,9 +632,7 @@
         max-width:100%; max-height:75vh;
         border-radius:14px; background:#fff;
       `;
-      // ⚠️ 关键：不要禁用长按菜单（别加 user-select:none / touch-callout:none）
 
-      // 提示文案
       const hint = document.createElement("div");
       hint.style.cssText = `
         margin-top:12px; color:#fff; opacity:.9;
@@ -683,18 +654,6 @@
         if (e.target === overlay) cleanup();
       });
     }
-
-    function toggleIntro() {
-      const more = document.getElementById("introMore");
-      const btn = document.getElementById("introToggle");
-      if (!more || !btn) return;
-
-      const isHidden = getComputedStyle(more).display === "none";
-      more.style.display = isHidden ? "block" : "none";
-      btn.textContent = isHidden ? "收起说明" : "展开说明";
-    }
-
-
   </script>
 </body>
 </html>
