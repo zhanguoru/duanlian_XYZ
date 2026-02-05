@@ -94,6 +94,97 @@
       button { padding:18px; font-size:15px; }
       .container { padding:16px 12px 48px; }
     }
+    .share-card {
+      background: linear-gradient(160deg,#0f172a,#111827);
+      color: #fff;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .share-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .brand {
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      opacity: 0.9;
+    }
+    .badge {
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+    .share-title {
+      font-size: 20px;
+      line-height: 1.35;
+      font-weight: 800;
+      margin: 6px 0 8px;
+    }
+    .share-sub {
+      font-size: 14px;
+      line-height: 1.65;
+      opacity: 0.88;
+      margin-bottom: 14px;
+    }
+    .share-metrics {
+      display: flex;
+      gap: 12px;
+      margin-top: 6px;
+    }
+    .share-metrics .m {
+      flex: 1;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .share-metrics .k {
+      font-size: 12px;
+      opacity: 0.75;
+      margin-bottom: 6px;
+    }
+    .share-metrics .v {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 0.2px;
+    }
+
+    .share-foot {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.12);
+    }
+    .share-foot .hint {
+      font-size: 13px;
+      opacity: 0.85;
+    }
+    .capture-wrap {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 720px;
+      padding: 16px;
+      background: #ffffff;
+      box-sizing: border-box;
+      pointer-events: none;
+      z-index: 999999;
+      opacity: 0.001;
+    }
+    .watermark {
+      margin-top: 8px;
+      font-size: 12px;
+      line-height: 1.4;
+      opacity: 0.55;
+      text-align: right;
+    }
+
+
   </style>
 </head>
 
@@ -136,17 +227,51 @@
       <button onclick="calculate()">计算这段关系的时间</button>
 
       <div class="result" id="result">
-        <p>关系总天数：<strong id="days"></strong></p>
-        <p>断联天数：<strong id="breakDays"></strong></p>
-        <div id="stage"></div>
-        <div class="explain">
-          <p>时间本身没有对错。</p>
-          <p>当一段关系持续的时间超过预期，它往往会影响你对当下的判断。</p>
-          <p>这个数字不是答案，只是一个参考。</p>
+
+        <!-- 分享截图专用卡片 -->
+        <div class="share-card" id="share-card">
+          <div class="share-top">
+            <div class="brand">duanlian.xyz</div>
+            <div class="badge" id="stageBadge">阶段</div>
+          </div>
+
+          <div class="share-title" id="shareTitle">
+            你不是放不下，是你还在等一个解释。
+          </div>
+
+          <div class="share-sub" id="shareSub">
+            把时间算清楚，不是为了证明谁对谁错，是为了让自己不再被情绪牵着走。
+          </div>
+
+          <div class="share-metrics">
+            <div class="m">
+              <div class="k">关系总长度</div>
+              <div class="v" id="days">-</div>
+            </div>
+            <div class="m">
+              <div class="k">断联已过去</div>
+              <div class="v" id="breakDays">-</div>
+            </div>
+          </div>
+
+          <div class="share-foot">
+            <div class="hint" id="shareHint">
+              提示：数字不是答案，但它会让你更清醒。
+            </div>
+            <div class="watermark">
+              计算来自 duanlian.xyz · 本地计算 · 不保存任何数据
+            </div>
+          </div>
+
+
+        <!-- 页面内补充说明（不进入截图） -->
+        <div class="no-capture">
+          <p>你现在看到的是时间的结果。</p>
+          <p>它不会替你做决定，但能帮你确认：你到底在这段关系里停留了多久。</p>
         </div>
 
-        <!-- 分享按钮 -->
-        <button class="share-btn" onclick="shareResult()">生成分享图片</button>
+
+        <button class="share-btn no-capture" onclick="shareResult()">生成分享图片</button>
       </div>
     </div>
 
@@ -231,27 +356,6 @@
   </div>
 
   <script>
-    // 阶段微评语数组，每个阶段可随机显示 2-3 条
-    const comments = {
-      green: [
-        "你刚断联，别急着回头。",
-        "冷静几天，观察自己的感受。",
-        "给自己一些时间，不要着急。",
-        "保持清醒，先关注自己。"
-      ],
-      yellow: [
-        "时间在慢慢冲淡过去。",
-        "多关注自己，给自己空间。",
-        "生活还在继续，慢慢前行。",
-        "断联过程中，你会慢慢释怀。"
-      ],
-      red: [
-        "彻底断开，重新开始。",
-        "坚持一段时间，你会轻松。",
-        "放下过去，迎接新生活。",
-        "时间会让你重新振作起来。"
-      ]
-    };
 
     function calculate() {
       const startInput = document.getElementById("startDate").value;
@@ -281,41 +385,115 @@
       document.getElementById("days").innerText = `${totalDays} 天`;
       document.getElementById("breakDays").innerText = `${breakDays} 天`;
 
-      // 阶段判断
-      let stageHtml = '';
-      let arr = [];
-      if(breakDays <= 7){ 
-        stageHtml = `<p class="green"><strong>🟢 断联 0–7 天｜情绪冷却期</strong></p>`; 
-        arr = comments.green; 
-      }
-      else if(breakDays <= 30){ 
-        stageHtml = `<p class="yellow"><strong>🟡 断联 8–30 天｜稳定分离</strong></p>`; 
-        arr = comments.yellow; 
-      }
-      else { 
-        stageHtml = `<p class="red"><strong>🔴 断联 31 天以上｜彻底断开</strong></p>`; 
-        arr = comments.red; 
+       // 阶段判断（情绪化表达，用于分享卡）
+      let badgeText = "";
+      let titleText = "";
+      let subText = "";
+      let hintText = "";
+
+      if (breakDays <= 7) {
+        badgeText = "🟢 0–7 天｜情绪未冷却";
+        titleText = "你不是放不下，是你还在等一个解释。";
+        subText = "这几天最容易冲动：不是想联系 TA，是想让自己别那么难受。";
+        hintText = "先别急着做决定，你现在大多是在情绪里。";
+      } else if (breakDays <= 30) {
+        badgeText = "🟡 8–30 天｜适应分离";
+        titleText = "你开始清醒了，但心还没跟上。";
+        subText = "你能正常生活了，但某些瞬间还是会被拉回去。";
+        hintText = "你不是退步，而是在戒断这段关系。";
+      } else {
+        badgeText = "🔴 31+ 天｜关系已结束";
+        titleText = "你不是忘了，是终于不再为 TA 找理由。";
+        subText = "真正的结束，不是断联，而是你不再反复证明当初没看错。";
+        hintText = "时间不会给答案，但会替你过滤掉幻想。";
       }
 
-      // 随机选择 2–3 条微评语
-      const shuffled = arr.sort(()=>0.5 - Math.random());
-      const commentHtml = shuffled.slice(0,3).map(c=>`<p>💬 ${c}</p>`).join('');
-      stageHtml += commentHtml;
+      document.getElementById("stageBadge").innerText = badgeText;
+      document.getElementById("shareTitle").innerText = titleText;
+      document.getElementById("shareSub").innerText = subText;
+      document.getElementById("shareHint").innerText = hintText;
 
-      document.getElementById("stage").innerHTML = stageHtml;
+      //document.getElementById("stage").innerHTML = stageHtml;
       document.getElementById("result").style.display = "block";
       window.location.hash = "#result";
     }
 
     function shareResult() {
-      const card = document.getElementById("result-card");
-      html2canvas(card, {backgroundColor:null}).then(canvas=>{
-        const link = document.createElement("a");
-        link.download = "关系时间结果.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
+    const hiddenEls = document.querySelectorAll(".no-capture");
+
+    const restore = () => {
+      hiddenEls.forEach(el => {
+        el.style.display = el.dataset._display || "";
+        delete el.dataset._display;
       });
+    };
+
+    // 截图前隐藏
+    hiddenEls.forEach(el => {
+      el.dataset._display = el.style.display;
+      el.style.display = "none";
+    });
+
+    try {
+      const card = document.getElementById("share-card");
+      if (!card) {
+        alert("请先点计算，再生成分享图片");
+        return;
+      }
+
+      card.scrollIntoView({ behavior: "auto", block: "center" });
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          const rect = card.getBoundingClientRect();
+          const scale = 2;
+
+          html2canvas(document.body, {
+            backgroundColor: "#ffffff",
+            scale: scale,
+            useCORS: true,
+            scrollX: -window.scrollX,
+            scrollY: -window.scrollY
+          }).then(canvas => {
+            const padding = 24 * scale;
+
+            let sx = Math.round(rect.left * scale) - padding;
+            let sy = Math.round(rect.top * scale) - padding;
+            let sw = Math.round(rect.width * scale) + padding * 2;
+            let sh = Math.round(rect.height * scale) + padding * 2;
+
+            sx = Math.max(0, sx);
+            sy = Math.max(0, sy);
+            sw = Math.min(canvas.width - sx, sw);
+            sh = Math.min(canvas.height - sy, sh);
+
+            const out = document.createElement("canvas");
+            out.width = sw;
+            out.height = sh;
+            const ctx = out.getContext("2d");
+
+            ctx.drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
+
+            const link = document.createElement("a");
+            link.download = "断联时间结果.png";
+            link.href = out.toDataURL("image/png");
+            link.click();
+          }).catch(err => {
+            console.error(err);
+            alert("截图失败：请打开控制台查看错误");
+          }).finally(() => {
+            restore();
+          });
+        });
+      });
+    } catch (e) {
+      console.error(e);
+      restore();
+      alert("截图流程出错：请打开控制台查看错误");
     }
+  }
+
+
   </script>
 </body>
 </html>
