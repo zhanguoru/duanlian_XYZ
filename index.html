@@ -314,7 +314,7 @@
               提示：数字不是答案，但它会让你更清醒。
             </div>
             <div class="watermark">
-              计算来自 duanlian.xyz · 本地计算 · 不保存任何数据
+              计算来自 duanlian.xyz · 本地计算 · 计算结果不上传
             </div>
           </div>
         </div> <!-- ✅ 这里补上：close share-card -->
@@ -328,46 +328,46 @@
 
         <button class="share-btn no-capture" onclick="shareResult()">生成分享图片</button>
       </div>
+    </div>
+    
+    <!-- 匿名一句话（建议位置：计算器后） -->
+    <section id="anon-one-liner" style="margin:18px 0 26px;">
+      <div style="padding:14px 14px;border:1px solid #eaeaea;border-radius:12px;background:#fff;">
+        <div style="font-weight:700;margin-bottom:8px;">💭 匿名一句话</div>
 
-<!-- 匿名一句话（建议位置：计算器前后） -->
-  <section id="anon-one-liner" style="margin:18px 0 26px;">
-    <div style="padding:14px 14px;border:1px solid #eaeaea;border-radius:12px;background:#fff;">
-      <div style="font-weight:700;margin-bottom:8px;">💭 匿名一句话</div>
+        <div id="oneLinerText" style="line-height:1.75;margin-bottom:12px;color:#222;">
+          加载中…
+        </div>
 
-      <div id="oneLinerText" style="line-height:1.75;margin-bottom:12px;color:#222;">
-        加载中…
+        <!-- 用 toggle-btn 让按钮不要占满整行（你站内已有样式） -->
+        <button id="openModalBtn" class="toggle-btn" type="button">
+          ✍️ 我也想说一句
+        </button>
+
+        <div id="oneLinerHint" style="margin-top:10px;color:#888;font-size:12px;"></div>
       </div>
+    </section>
+    <!-- 弹窗 -->
+    <div id="anonModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999999;">
+      <div style="background:#fff;max-width:560px;margin:10vh auto;padding:16px;border-radius:12px;">
+        <div style="font-weight:700;margin-bottom:8px;">你现在最想说的一句话是？</div>
 
-      <!-- 用 toggle-btn 让按钮不要占满整行（你站内已有样式） -->
-      <button id="openModalBtn" class="toggle-btn" type="button">
-        ✍️ 我也想说一句
-      </button>
+        <input
+          id="anonInput"
+          maxlength="50"
+          placeholder="比如：我知道该断联，可我真的很想他。"
+          style="width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;font-size:16px;box-sizing:border-box;"
+        />
 
-      <div id="oneLinerHint" style="margin-top:10px;color:#888;font-size:12px;"></div>
+        <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end;">
+          <!-- 这里用 toggle-btn，避免继承你全局 button{width:100%} 的大按钮效果 -->
+          <button id="cancelBtn" class="toggle-btn" type="button">取消</button>
+          <button id="submitBtn" class="toggle-btn" type="button">匿名发布</button>
+        </div>
+
+        <div id="modalHint" style="margin-top:8px;color:#888;font-size:12px;"></div>
+      </div>
     </div>
-  </section>
-
-<!-- 弹窗 -->
-<div id="anonModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:999999;">
-  <div style="background:#fff;max-width:560px;margin:10vh auto;padding:16px;border-radius:12px;">
-    <div style="font-weight:700;margin-bottom:8px;">你现在最想说的一句话是？</div>
-
-    <input
-      id="anonInput"
-      maxlength="50"
-      placeholder="比如：我知道该断联，可我真的很想他。"
-      style="width:100%;padding:12px;border:1px solid #ddd;border-radius:10px;font-size:16px;box-sizing:border-box;"
-    />
-
-    <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end;">
-      <!-- 这里用 toggle-btn，避免继承你全局 button{width:100%} 的大按钮效果 -->
-      <button id="cancelBtn" class="toggle-btn" type="button">取消</button>
-      <button id="submitBtn" class="toggle-btn" type="button">匿名发布</button>
-    </div>
-
-    <div id="modalHint" style="margin-top:8px;color:#888;font-size:12px;"></div>
-  </div>
-</div>
 
 
       <section>
@@ -381,9 +381,6 @@
         </ul>
       </section>
 
-
-
-    </div>
 
     <h2 id="faq">断联多久算结束？常见问题</h2>
 
@@ -445,7 +442,7 @@
         <summary>你们会保存我的数据吗？</summary>
         <div class="faq-body">
           不会。所有计算都在你的浏览器中完成，
-          不会被记录、存储或上传，任何个人信息都不会被收集。
+          计算过程在本地完成，不上传日期等个人计算数据；匿名一句话会保存你输入的文本内容，用于在首页展示
         </div>
       </details>
     </div>
