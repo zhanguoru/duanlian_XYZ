@@ -1,5 +1,8 @@
 // functions/api/messages.js
 
+
+
+
 /**
  * Anonymous one-liner API (Cloudflare Pages Functions + D1)
  *
@@ -14,6 +17,11 @@
  *   env.RATE_LIMIT_SALT (Pages project -> Settings -> Functions -> Variables and secrets)
  */
 
+const ALLOWED_ORIGINS = new Set([
+  "https://duanlian.xyz",
+  "https://www.duanlian.xyz",
+]);
+
 // ---------- helpers ----------
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -25,14 +33,20 @@ function json(data, status = 200, extraHeaders = {}) {
   });
 }
 
-function getCorsHeaders() {
-  // If your frontend is same-domain, you can tighten this later.
-  return {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-  };
+function getCorsHeaders(request) {
+  const origin = request.headers.get("Origin");
+  if (origin && ALLOWED_ORIGINS.has(origin)) {
+    return {
+      "Access-Control-Allow-Origin": origin,
+      "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Vary": "Origin",
+    };
+  }
+  // 非允许来源，不返回 CORS 头
+  return {};
 }
+
 
 function getClientIp(request) {
   // Cloudflare canonical
@@ -65,7 +79,7 @@ function normalizeText(s) {
 // ---------- handler ----------
 export async function onRequest(context) {
   const { request, env } = context;
-  const corsHeaders = getCorsHeaders();
+  const corsHeaders = getCorsHeaders(request);
 
   // Preflight
   if (request.method === "OPTIONS") {
