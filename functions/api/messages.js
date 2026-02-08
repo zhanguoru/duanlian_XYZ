@@ -1,3 +1,23 @@
+async function sha256Hex(input) {
+  const data = new TextEncoder().encode(input);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function getClientIp(request) {
+  // Cloudflare 常用头
+  const cfip = request.headers.get("cf-connecting-ip");
+  if (cfip) return cfip;
+
+  // 兜底：x-forwarded-for 可能是 "ip, ip, ip"
+  const xff = request.headers.get("x-forwarded-for");
+  if (xff) return xff.split(",")[0].trim();
+
+  return "unknown";
+}
+
+
 export async function onRequest(context) {
   const { request, env } = context;
 
